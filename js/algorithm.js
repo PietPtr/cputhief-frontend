@@ -16,34 +16,64 @@ function isPrime(n) {
     return true;
 }
 
-if (true) {
-    // fetch an assignment
+function post_results(result, block, time, n) {
+    var post = new XMLHttpRequest();
+    post.onreadystatechange = function() {
+        if (post.readyState == XMLHttpRequest.DONE) {
+            console.log(post.responseText);
+        }
+    }
+
+    console.log(result);
+
+    json = {};
+    json["result"] = result;
+    json["block"] = block;
+    json["time"] = 0;
+    json["n"] = n;
+
+    console.log(json);
+
+    post.open('POST', 'http://polyakov.student.utwente.nl:5000/api/post_results', true);
+    post.send(JSON.stringify(json));
+}
+
+function get_assignment() {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE) {
-            // execute assignment
             var assignment = JSON.parse(xhr.responseText);
 
             console.log(assignment);
 
             console.time("prime");
 
-            var num = 298374949981889;
-            for (i = num; i < num + 1000; i++) {
+            var primes = []
+
+            var block = assignment.block;
+            for (i = block; i < block + assignment.n; i++) {
                 if (isPrime(i)) {
-                    // console.log(i);
+                    primes.push(i);
+                }
+
+                counter = i - block
+                if (counter % Math.floor(assignment.n / 100) == 0) {
+                    postMessage((counter / assignment.n) * 100);
                 }
             }
 
             console.timeEnd("prime");
+
+            post_results(primes, assignment.block, assignment.n);
+
+            get_assignment();
         }
     }
     xhr.open('GET', 'http://polyakov.student.utwente.nl:5000/api/get_number', true);
     xhr.send(null);
-
-
-    // send result back
 }
+
+get_assignment();
 
 
 // $.get('http://polyakov.student.utwente.nl:5000/api/get_number', {
