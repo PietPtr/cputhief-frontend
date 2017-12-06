@@ -57,8 +57,8 @@ function get_assignment() {
                 }
 
                 counter = i - block
-                if (counter % Math.floor(assignment.n / 100) == 0) {
-                    postMessage((counter / assignment.n) * 100);
+                if (counter % Math.floor(assignment.n / 45) == 0) {
+                    postMessage((counter / assignment.n) * 45);
                 }
             }
 

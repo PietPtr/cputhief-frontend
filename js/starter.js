@@ -21,8 +21,10 @@ var handleMessage = function(index, event) {
     console.log("index: ", index)
     console.log("event: ", event.data)
 
+    var progress = parseInt(event.data)
+
     document.getElementById("Worker" + index).innerHTML = "Worker " + index +
-        ": " + "|".repeat(parseInt(event.data))
+        ": " + "|".repeat(progress) + ".".repeat(45 - progress)
 };
 
 // Set communication function
